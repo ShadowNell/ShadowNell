@@ -1,0 +1,149 @@
+<label>Enter Number 1:</label>
+
+<input type="text" id="num1" onblur="validateInputs()">
+
+<br><br>
+
+<label>Enter Number 2:</label>
+
+<input type="text" id="num2" onblur="validateInputs()">
+
+<br><br>
+
+<button id="addBtn" disabled>+</button>
+
+<button id="subBtn" disabled>-</button>
+
+<button id="mulBtn" disabled>*</button>
+
+<button id="divBtn" disabled>/</button>
+
+<br><br>
+
+<label>Result:</label>
+
+<input type="text" id="result" disabled>
+
+
+
+$(document).ready(function(){
+
+  $('#num1, #num2').on('input', function(){
+
+    validateInputs();
+
+  });
+
+  
+
+  $('#addBtn').on('click', function(){
+
+    var num1 = parseInt($('#num1').val());
+
+    var num2 = parseInt($('#num2').val());
+
+    var result = num1 + num2;
+
+    $('#result').val(result);
+
+  });
+
+  
+
+  $('#subBtn').on('click', function(){
+
+    var num1 = parseInt($('#num1').val());
+
+    var num2 = parseInt($('#num2').val());
+
+    var result = num1 - num2;
+
+    $('#result').val(result);
+
+  });
+
+  
+
+  $('#mulBtn').on('click', function(){
+
+    var num1 = parseInt($('#num1').val());
+
+    var num2 = parseInt($('#num2').val());
+
+    var result = num1 * num2;
+
+    $('#result').val(result);
+
+  });
+
+  
+
+  $('#divBtn').on('click', function(){
+
+    var num1 = parseInt($('#num1').val());
+
+    var num2 = parseInt($('#num2').val());
+
+    var result = num1 / num2;
+
+    $('#result').val(result);
+
+  });
+
+});
+
+function validateInputs(){
+
+  var num1 = $('#num1').val();
+
+  var num2 = $('#num2').val();
+
+  
+
+  if(num1.length > 0 && num2.length > 0){
+
+    $('#addBtn').prop('disabled', false);
+
+    $('#subBtn').prop('disabled', false);
+
+    $('#mulBtn').prop('disabled', false);
+
+    $('#divBtn').prop('disabled', false);
+
+  }
+
+  else{
+
+    $('#addBtn').prop('disabled', true);
+
+    $('#subBtn').prop('disabled', true);
+
+    $('#mulBtn').prop('disabled', true);
+
+    $('#divBtn').prop('disabled', true);
+
+  }
+
+  
+
+  if(num1.length > 10 || num2.length > 10){
+
+    $('#num1, #num2').addClass('error');
+
+  }
+
+  else{
+
+    $('#num1, #num2').removeClass('error');
+
+  }
+
+}
+
+.error{
+
+  border-color: red;
+
+  background-color: yellow;
+
+}

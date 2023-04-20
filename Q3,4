@@ -1,0 +1,26 @@
+$(document).ready(function() {
+
+  // create the div element with its contents
+
+  var divElement = $('<div><h1>JQuery Core</h1></div>');
+
+  
+
+  // append the div element to the body element
+
+  $('body').append(divElement);
+
+});
+
+
+$("p").click(function() {
+
+   $("body").append("<p>This is a click Event</p>");
+
+});
+
+$("p").dblclick(function() {
+
+   $("body").append("<p>This is a double-click Event</p>");
+
+});

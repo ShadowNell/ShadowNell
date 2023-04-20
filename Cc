@@ -1,0 +1,76 @@
+using System;
+
+using System.Collections.Generic;
+
+using System.Data.SQLite;
+
+using System.Linq;
+
+namespace LINQSQLiteDemo
+
+{
+
+    class Program
+
+    {
+
+        static void Main(string[] args)
+
+        {
+
+            // Set up SQLite connection
+
+            var connectionString = "Data Source=myDatabase.sqlite;Version=3;";
+
+            var connection = new SQLiteConnection(connectionString);
+
+            connection.Open();
+
+            // Create a table in the database
+
+            var createTableCommand = new SQLiteCommand(
+
+                "CREATE TABLE IF NOT EXISTS People (Id INTEGER PRIMARY KEY, Name TEXT, Age INTEGER)", 
+
+                connection);
+
+            createTableCommand.ExecuteNonQuery();
+
+            // Insert some data into the table
+
+            var insertCommand = new SQLiteCommand(
+
+                "INSERT INTO People (Name, Age) VALUES ('Alice', 25), ('Bob', 30), ('Charlie', 35)",
+
+                connection);
+
+            insertCommand.ExecuteNonQuery();
+
+            // Use LINQ to query the data
+
+            var query = from row in connection.Query("SELECT * FROM People")
+
+                        where row.Get<int>("Age") > 30
+
+                        select new { Name = row.Get<string>("Name"), Age = row.Get<int>("Age") };
+
+            // Print out the results
+
+            foreach (var person in query)
+
+            {
+
+                Console.WriteLine($"{person.Name} is {person.Age} years old.");
+
+            }
+
+            // Close the connection
+
+            connection.Close();
+
+        }
+
+    }
+
+}
+

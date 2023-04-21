@@ -1,0 +1,333 @@
+// Person.cs - base class
+
+namespace ClassLibraryExample
+
+{
+
+    public class Person
+
+    {
+
+        public string FirstName { get; set; }
+
+        public string LastName { get; set; }
+
+        public Person(string firstName, string lastName)
+
+        {
+
+            FirstName = firstName;
+
+            LastName = lastName;
+
+        }
+
+        public virtual string GetGreeting()
+
+        {
+
+            return $"Hello, my name is {FirstName} {LastName}.";
+
+        }
+
+    }
+
+}
+
+// Student.cs - derived class
+
+namespace ClassLibraryExample
+
+{
+
+    public class Student : Person
+
+    {
+
+        public int StudentId { get; set; }
+
+        public Student(string firstName, string lastName, int studentId)
+
+            : base(firstName, lastName)
+
+        {
+
+            StudentId = studentId;
+
+        }
+
+        public override string GetGreeting()
+
+        {
+
+            return $"Hi, I'm a student. My name is {FirstName} {LastName} and my ID is {StudentId}.";
+
+        }
+
+        public static int Add(int num1, int num2)
+
+        {
+
+            return num1 + num2;
+
+        }
+
+        public int Multiply(int num1, int num2)
+
+        {
+
+            return num1 * num2;
+
+        }
+
+        public delegate int CalculationDelegate(int num1, int num2);
+
+        public static int DoCalculation(CalculationDelegate calculation, int num1, int num2)
+
+        {
+
+            return calculation(num1, num2);
+
+        }
+
+    }
+
+}
+
+// Program.cs - console application
+
+using System;
+
+namespace ConsoleAppExample
+
+{
+
+    class Program
+
+    {
+
+        static void Main(string[] args)
+
+        {
+
+            // Create a new student
+
+            var student = new ClassLibraryExample.Student("John", "Doe", 12345);
+
+            // Call instance method
+
+            var result1 = student.Multiply(5, 6);
+
+            Console.WriteLine($"5 x 6 = {result1}");
+
+            // Call static method
+
+            var result2 = ClassLibraryExample.Student.Add(2, 3);
+
+            Console.WriteLine($"2 + 3 = {result2}");
+
+            // Create a new delegate
+
+            ClassLibraryExample.Student.CalculationDelegate calcDelegate = ClassLibraryExample.Student.Add;
+
+            // Call delegate method
+
+            var result3 = ClassLibraryExample.Student.DoCalculation(calcDelegate, 4, 7);
+
+            Console.WriteLine($"4 + 7 = {result3}");
+
+            // Call overridden method
+
+            Console.WriteLine(student.GetGreeting());
+
+            // Get type information
+
+            var type = student.GetType();
+
+            Console.WriteLine($"Type: {type}");
+
+            // Get method information
+
+            var method = type.GetMethod("Multiply");
+
+            Console.WriteLine($"Method: {method}");
+
+        }
+
+    }
+
+}
+
+using System;
+
+using System.Reflection;
+
+namespace ReflectionDemo
+
+{
+
+    class Program
+
+    {
+
+        static void Main(string[] args)
+
+        {
+
+            // Load the assembly to be inspected
+
+            Assembly assembly = Assembly.LoadFrom("MyAssembly.dll");
+
+            // Display information about each type in the assembly
+
+            foreach (Type type in assembly.GetTypes())
+
+            {
+
+                Console.WriteLine($"Type: {type.FullName}");
+
+                // Display information about each member of the type
+
+                foreach (MemberInfo member in type.GetMembers())
+
+                {
+
+                    Console.WriteLine($"  Member: {member.Name} ({member.MemberType})");
+
+                }
+
+                // Invoke any instance methods with no parameters and display the result
+
+                object instance = Activator.CreateInstance(type);
+
+                foreach (MethodInfo method in type.GetMethods(BindingFlags.Instance | BindingFlags.Public))
+
+                {
+
+                    if (method.ReturnType != typeof(void) && method.GetParameters().Length == 0)
+
+                    {
+
+                        Console.WriteLine($"  Invoking {method.Name}...");
+
+                        object result = method.Invoke(instance, null);
+
+                        Console.WriteLine($"    Result: {result}");
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    }
+
+    public class MyClass
+
+    {
+
+        private int _myField = 42;
+
+        public string MyProperty { get; set; }
+
+        public static void MyStaticMethod()
+
+        {
+
+            Console.WriteLine("MyStaticMethod called");
+
+        }
+
+        public int MyInstanceMethod()
+
+        {
+
+            Console.WriteLine("MyInstanceMethod called");
+
+            return _myField;
+
+        }
+
+    }
+
+}
+
+using System;
+
+using System.Collections.Generic;
+
+using System.Data.Linq;
+
+using System.Linq;
+
+namespace LinqDemo
+
+{
+
+    class Program
+
+    {
+
+        static void Main(string[] args)
+
+        {
+
+            // LINQ to Objects
+
+            var numbers = new List<int> { 1, 2, 3, 4, 5 };
+
+            var evenNumbers = numbers.Where(n => n % 2 == 0);
+
+            Console.WriteLine("Even numbers:");
+
+            foreach (var number in evenNumbers)
+
+            {
+
+                Console.WriteLine(number);
+
+            }
+
+            // LINQ to SQL
+
+            var connectionString = "Data Source=myDatabase.sqlite;Version=3;";
+
+            var db = new DataContext(connectionString);
+
+            var people = db.GetTable<Person>();
+
+            var query = from person in people
+
+                        where person.Age > 30
+
+                        select new { person.Name, person.Age };
+
+            Console.WriteLine("\nPeople over 30:");
+
+            foreach (var person in query)
+
+            {
+
+                Console.WriteLine($"{person.Name} is {person.Age} years old.");
+
+            }
+
+        }
+
+    }
+
+    public class Person
+
+    {
+
+        public int Id { get; set; }
+
+        public string Name { get; set; }
+
+        public int Age { get; set; }
+
+    }
+
+}
